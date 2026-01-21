@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuidar, Proteger e Conviver: Saúde Mental e Prevenção das Violências</title>
+    
+    <!-- React e ReactDOM via CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel para processar JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Estilos de animação personalizados -->
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        @keyframes bounceSlow {
+            0%, 100% { transform: translateY(-5%); }
+            50% { transform: translateY(5%); }
+        }
+        .animate-bounce-slow {
+            animation: bounceSlow 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- ÍCONES (SVG Inline para evitar dependências externas complexas) ---
+        const Play = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        );
+        const CheckCircle = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        );
+        const ArrowRight = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        );
+        const BookOpen = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+        );
+        const Star = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        );
+        const RefreshCw = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        );
+        const Trophy = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M8 21h8a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v1a2 2 0 0 0 2 2z"></path><path d="M16 4h3a2 2 0 0 1 2 2v1a5 5 0 0 1-5 5h-4a5 5 0 0 1-5-5V6a2 2 0 0 1 2-2h3"></path><line x1="12" y1="15" x2="12" y2="18"></line></svg>
+        );
+        const Heart = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        );
+
+        // --- DADOS DO CURSO ---
+        const courseData = [
+          {
+            id: 1,
+            title: "Sessão 1: Bullying",
+            videoId: "SykY6r3CDLg",
+            imageId: "v8TTs4z",
+            questions: [
+              {
+                question: "O que caracteriza o bullying?",
+                options: [
+                  "Uma brincadeira ocasional entre amigos.",
+                  "Agressões intencionais, verbais ou físicas, feitas de maneira repetitiva.",
+                  "Um desentendimento único por conta de um jogo.",
+                  "Elogios feitos de forma exagerada."
+                ],
+                correct: 1
+              },
+              {
+                question: "Quem participa do ciclo do bullying?",
+                options: [
+                  "Apenas a vítima e o agressor.",
+                  "Apenas a escola e os pais.",
+                  "O agressor, a vítima e os espectadores (testemunhas).",
+                  "Ninguém, é algo imaginário."
+                ],
+                correct: 2
+              },
+              {
+                question: "Qual é uma forma eficaz de combater o bullying?",
+                options: [
+                  "Revidar com violência física.",
+                  "Ficar calado e ignorar.",
+                  "Acolher a vítima e buscar ajuda de adultos responsáveis.",
+                  "Rir da situação para não ser o próximo alvo."
+                ],
+                correct: 2
+              }
+            ]
+          },
+          {
+            id: 2,
+            title: "Sessão 2: Saúde Mental e Cultura de Paz",
+            videoId: "-HuzLjbNsPI",
+            imageId: "p9FZR7v",
+            questions: [
+              {
+                question: "O que é promover uma Cultura de Paz?",
+                options: [
+                  "Evitar qualquer tipo de conversa difícil.",
+                  "Resolver conflitos através do diálogo e respeito aos direitos humanos.",
+                  "Impor suas vontades para manter a ordem.",
+                  "Viver isolado para não ter problemas."
+                ],
+                correct: 1
+              },
+              {
+                question: "A saúde mental está relacionada a:",
+                options: [
+                  "Apenas não ter doenças mentais.",
+                  "Estar feliz 100% do tempo.",
+                  "Equilíbrio emocional e capacidade de lidar com as tensões da vida.",
+                  "Ter notas altas na escola."
+                ],
+                correct: 2
+              },
+              {
+                question: "Qual comportamento ajuda na boa convivência?",
+                options: [
+                  "Escuta ativa e empatia.",
+                  "Julgamento precipitado.",
+                  "Indiferença.",
+                  "Agressividade verbal."
+                ],
+                correct: 0
+              }
+            ]
+          },
+          {
+            id: 3,
+            title: "Sessão 3: Tempos Atuais",
+            videoId: "_GnBaUp9nOg",
+            imageId: "agfnFbY",
+            questions: [
+              {
+                question: "Nos tempos atuais, como muitas vezes reagimos sob pressão?",
+                options: [
+                  "Sempre com total calma.",
+                  "Frequentemente com reações de 'luta ou fuga' (ataque ou defesa).",
+                  "Dormindo imediatamente.",
+                  "Ignorando a tecnologia."
+                ],
+                correct: 1
+              },
+              {
+                question: "Reconhecer suas emoções é um sinal de:",
+                options: [
+                  "Fraqueza.",
+                  "Perda de tempo.",
+                  "Autoconhecimento e inteligência emocional.",
+                  "Egoísmo."
+                ],
+                correct: 2
+              },
+              {
+                question: "O excesso de estímulos digitais pode causar:",
+                options: [
+                  "Aumento da ansiedade e dificuldade de concentração.",
+                  "Paz interior absoluta.",
+                  "Melhora imediata no sono.",
+                  "Fim de todos os conflitos."
+                ],
+                correct: 0
+              }
+            ]
+          },
+          {
+            id: 4,
+            title: "Sessão 4: Assertividade",
+            videoId: "xbwv1di9ynI",
+            imageId: "1SQU2yo",
+            questions: [
+              {
+                question: "O que significa ser assertivo?",
+                options: [
+                  "Falar gritando para ser ouvido.",
+                  "Não expressar sua opinião para não chatear os outros.",
+                  "Expressar seus sentimentos e direitos com clareza, sem agredir o outro.",
+                  "Manipular as pessoas para conseguir o que quer."
+                ],
+                correct: 2
+              },
+              {
+                question: "Na escola, a assertividade ajuda a:",
+                options: [
+                  "Criar inimizades.",
+                  "Estabelecer limites saudáveis e melhorar o aprendizado.",
+                  "Dominar os colegas.",
+                  "Faltar às aulas sem justificativa."
+                ],
+                correct: 1
+              },
+              {
+                question: "Dizer 'não' quando necessário é:",
+                options: [
+                  "Uma falta de educação.",
+                  "Um direito assertivo.",
+                  "Proibido entre amigos.",
+                  "Um sinal de agressividade."
+                ],
+                correct: 1
+              }
+            ]
+          },
+          {
+            id: 5,
+            title: "Sessão 5: Agressivo e Passivo",
+            videoId: "FW9YHIbw0Eg",
+            imageId: "LGQaCtc",
+            questions: [
+              {
+                question: "Qual característica define o comportamento passivo?",
+                options: [
+                  "Explosões de raiva.",
+                  "Dificuldade em dizer não e colocar as necessidades dos outros acima das suas.",
+                  "Falar com clareza e firmeza.",
+                  "Desrespeitar os direitos alheios."
+                ],
+                correct: 1
+              },
+              {
+                question: "O comportamento agressivo geralmente gera:",
+                options: [
+                  "Medo, afastamento e mais violência.",
+                  "Respeito genuíno e admiração.",
+                  "Paz e harmonia.",
+                  "Colaboração da equipe."
+                ],
+                correct: 0
+              },
+              {
+                question: "O objetivo é sair dos extremos (passivo/agressivo) e buscar:",
+                options: [
+                  "A indiferença.",
+                  "O isolamento.",
+                  "O equilíbrio assertivo.",
+                  "A vingança."
+                ],
+                correct: 2
+              }
+            ]
+          },
+          {
+            id: 6,
+            title: "Sessão 6: Comunicação com Confiança",
+            videoId: "pkWz0mp5r2E",
+            imageId: "2monaHa",
+            questions: [
+              {
+                question: "Para comunicar com confiança, é importante:",
+                options: [
+                  "Olhar para o chão enquanto fala.",
+                  "Manter contato visual e tom de voz adequado.",
+                  "Falar o mais rápido possível.",
+                  "Usar gírias ofensivas."
+                ],
+                correct: 1
+              },
+              {
+                question: "A linguagem corporal (postura, gestos):",
+                options: [
+                  "Não importa na comunicação.",
+                  "Diz muito sobre como nos sentimos e reforça nossa mensagem.",
+                  "Só é importante para atores.",
+                  "Deve ser rígida e imóvel."
+                ],
+                correct: 1
+              },
+              {
+                question: "Confiança na comunicação significa:",
+                options: [
+                  "Saber que você é melhor que os outros.",
+                  "Acreditar na sua própria voz e no direito de ser ouvido.",
+                  "Nunca aceitar críticas.",
+                  "Falar alto o tempo todo."
+                ],
+                correct: 1
+              }
+            ]
+          },
+          {
+            id: 7,
+            title: "Sessão 7: Como lidar com os conflitos",
+            videoId: "bThLZOFJWVs",
+            imageId: "EMPiCsl",
+            questions: [
+              {
+                question: "O conflito é:",
+                options: [
+                  "Sempre algo ruim e destrutivo.",
+                  "Algo natural da convivência que pode ser uma oportunidade de crescimento.",
+                  "Algo que deve ser evitado a qualquer custo.",
+                  "Prova de que as pessoas não se gostam."
+                ],
+                correct: 1
+              },
+              {
+                question: "Uma boa estratégia para resolver conflitos é:",
+                options: [
+                  "Ganhar a discussão a qualquer preço.",
+                  "Buscar soluções onde todos ganham (ganha-ganha).",
+                  "Ignorar a pessoa para sempre.",
+                  "Fazer fofoca sobre o ocorrido."
+                ],
+                correct: 1
+              },
+              {
+                question: "Para 'mandar bem' nos conflitos, devemos:",
+                options: [
+                  "Agir por impulso.",
+                  "Controlar as emoções e focar no problema, não na pessoa.",
+                  "Atacar a personalidade do outro.",
+                  "Chamar mais gente para a briga."
+                ],
+                correct: 1
+              }
+            ]
+          }
+        ];
+
+        // --- COMPONENTES ---
+
+        const Button = ({ onClick, children, variant = "primary", className = "", disabled = false }) => {
+          const baseStyle = "px-6 py-3 rounded-full font-bold transition-all duration-300 shadow-md flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed";
+          const variants = {
+            primary: "bg-teal-600 hover:bg-teal-700 text-white hover:scale-105",
+            secondary: "bg-white text-teal-700 border-2 border-teal-600 hover:bg-teal-50",
+            success: "bg-green-500 hover:bg-green-600 text-white",
+            outline: "border-2 border-white text-white hover:bg-white hover:text-purple-900"
+          };
+
+          return (
+            <button onClick={onClick} disabled={disabled} className={`${baseStyle} ${variants[variant]} ${className}`}>
+              {children}
+            </button>
+          );
+        };
+
+        const ProgressBar = ({ current, total }) => {
+          const percentage = ((current + 1) / total) * 100;
+          return (
+            <div className="w-full bg-gray-200 h-2.5 rounded-full mb-6">
+              <div 
+                className="bg-teal-600 h-2.5 rounded-full transition-all duration-500 ease-out" 
+                style={{ width: `${Math.min(percentage, 100)}%` }}
+              ></div>
+              <p className="text-xs text-gray-500 text-right mt-1">Progresso: {Math.round(percentage)}%</p>
+            </div>
+          );
+        };
+
+        // --- APP PRINCIPAL ---
+
+        function App() {
+          const [screen, setScreen] = useState('cover'); // cover, content, quiz, results
+          const [currentSessionIndex, setCurrentSessionIndex] = useState(0);
+          const [quizScore, setQuizScore] = useState(0);
+          const [totalQuestionsAnswered, setTotalQuestionsAnswered] = useState(0);
+          
+          // Quiz State
+          const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+          const [selectedOption, setSelectedOption] = useState(null);
+          const [isAnswerChecked, setIsAnswerChecked] = useState(false);
+          const [sessionScore, setSessionScore] = useState(0);
+
+          const currentSession = courseData[currentSessionIndex];
+
+          // Helper para Scroll Top
+          useEffect(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, [screen, currentSessionIndex, currentQuestionIndex]);
+
+          // --- HANDLERS ---
+
+          const startCourse = () => {
+            setScreen('content');
+          };
+
+          const startQuiz = () => {
+            setScreen('quiz');
+            setCurrentQuestionIndex(0);
+            setSelectedOption(null);
+            setIsAnswerChecked(false);
+            setSessionScore(0);
+          };
+
+          const checkAnswer = () => {
+            if (selectedOption === null) return;
+            
+            setIsAnswerChecked(true);
+            const correct = currentSession.questions[currentQuestionIndex].correct;
+            
+            if (selectedOption === correct) {
+              setSessionScore(prev => prev + 1);
+              setQuizScore(prev => prev + 1);
+            }
+            setTotalQuestionsAnswered(prev => prev + 1);
+          };
+
+          const nextQuestion = () => {
+            if (currentQuestionIndex < currentSession.questions.length - 1) {
+              setCurrentQuestionIndex(prev => prev + 1);
+              setSelectedOption(null);
+              setIsAnswerChecked(false);
+            } else {
+              // Fim do quiz da sessão
+              handleSessionComplete();
+            }
+          };
+
+          const handleSessionComplete = () => {
+            if (currentSessionIndex < courseData.length - 1) {
+              setCurrentSessionIndex(prev => prev + 1);
+              setScreen('content');
+            } else {
+              setScreen('results');
+            }
+          };
+
+          const restartCourse = () => {
+            setCurrentSessionIndex(0);
+            setQuizScore(0);
+            setTotalQuestionsAnswered(0);
+            setScreen('cover');
+          };
+
+          // --- TELAS ---
+
+          if (screen === 'cover') {
+            return (
+              <div 
+                className="min-h-screen flex flex-col items-center justify-center relative font-sans"
+                style={{
+                  backgroundImage: `url('https://i.imgur.com/FOImCKJ.png')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundAttachment: 'fixed'
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-purple-900/60 to-black/50"></div>
+                
+                <div className="relative z-10 max-w-4xl px-6 text-center text-white space-y-8 animate-fade-in-up">
+                  <div className="bg-black/40 backdrop-blur-none p-8 rounded-3xl border border-white/10 shadow-2xl">
+                    <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-white">
+                      Cuidar, Proteger e Conviver
+                    </h1>
+                    <h2 className="text-xl md:text-2xl font-light text-teal-100 mb-8">
+                      Saúde Mental e Prevenção das Violências
+                    </h2>
+                    
+                    <p className="text-lg md:text-xl leading-relaxed text-gray-100 mb-8 max-w-2xl mx-auto drop-shadow-md">
+                      “Cuidar da saúde mental é fundamental para viver com mais equilíbrio e harmonia e falar sobre prevenção das violências fortalece relações mais seguras e acolhedoras.
+                      <br/><br/>
+                      Este curso convida você a refletir, aprender e construir formas mais saudáveis de conviver.”
+                    </p>
+
+                    <Button onClick={startCourse} variant="primary" className="mx-auto text-lg w-full md:w-auto">
+                      Iniciar Jornada <ArrowRight size={24} />
+                    </Button>
+                  </div>
+                </div>
+                
+                <footer className="absolute bottom-4 text-white/70 text-xs md:text-sm text-center px-4 max-w-5xl">
+                  <p>
+                    Curso Educativo para Adolescentes desenvolvido para o Programa Saúde na Escola do Município de Florianópolis
+                  </p>
+                  <p className="mt-1">
+                    © Prefeitura Municipal de Florianópolis - Secretaria Municipal de Saúde.
+                  </p>
+                </footer>
+              </div>
+            );
+          }
+
+          if (screen === 'content') {
+            return (
+              <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+                {/* Header */}
+                <header className="bg-purple-900 text-white p-4 shadow-lg sticky top-0 z-50">
+                  <div className="max-w-5xl mx-auto flex justify-between items-center">
+                    <h3 className="font-bold text-lg md:text-xl truncate">{currentSession.title}</h3>
+                    <span className="bg-teal-600 px-3 py-1 rounded-full text-xs font-bold">
+                      Fase {currentSessionIndex + 1}/{courseData.length}
+                    </span>
+                  </div>
+                </header>
+
+                <main className="flex-grow p-4 md:p-8 max-w-5xl mx-auto w-full">
+                  <ProgressBar current={currentSessionIndex} total={courseData.length} />
+
+                  <div className="flex flex-col gap-10 mb-10">
+                    {/* Vídeo */}
+                    <div className="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100">
+                      <div className="flex items-center gap-3 mb-5 text-purple-900 border-b pb-4 border-gray-100">
+                        <div className="p-2 bg-purple-100 rounded-lg">
+                          <Play size={32} className="fill-purple-600 text-purple-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-2xl">Assista ao Vídeo</h4>
+                          <p className="text-gray-500 text-sm">Aprofunde seu conhecimento sobre o tema</p>
+                        </div>
+                      </div>
+                      <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black shadow-inner ring-4 ring-purple-50">
+                        <iframe 
+                          width="100%" 
+                          height="100%" 
+                          src={`https://www.youtube.com/embed/${currentSession.videoId}`} 
+                          title={currentSession.title}
+                          frameBorder="0" 
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                          allowFullScreen
+                        ></iframe>
+                      </div>
+                    </div>
+
+                    {/* Imagem/Infográfico */}
+                    <div className="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100">
+                      <div className="flex items-center gap-3 mb-5 text-teal-700 border-b pb-4 border-gray-100">
+                        <div className="p-2 bg-teal-100 rounded-lg">
+                          <BookOpen size={32} className="text-teal-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-2xl">Material de Apoio</h4>
+                          <p className="text-gray-500 text-sm">Infográfico para reflexão</p>
+                        </div>
+                      </div>
+                      <div className="rounded-2xl overflow-hidden shadow-inner border border-gray-200 bg-gray-50">
+                        <img 
+                          src={`https://i.imgur.com/${currentSession.imageId}.png`} 
+                          alt={`Material de apoio: ${currentSession.title}`}
+                          className="w-full h-auto object-contain hover:scale-[1.01] transition-transform duration-500"
+                          onError={(e) => {
+                            e.target.onerror = null; 
+                            e.target.src = "https://via.placeholder.com/800x600?text=Imagem+Carregando...";
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-xl mb-8">
+                    <h5 className="font-bold text-blue-900 mb-2">Pronto para testar seus conhecimentos?</h5>
+                    <p className="text-blue-800 mb-4">Complete o teste rápido desta sessão para desbloquear o próximo conteúdo.</p>
+                    <Button onClick={startQuiz} variant="primary" className="w-full md:w-auto">
+                      Fazer Teste Rápido <CheckCircle size={20} />
+                    </Button>
+                  </div>
+                </main>
+              </div>
+            );
+          }
+
+          if (screen === 'quiz') {
+            const question = currentSession.questions[currentQuestionIndex];
+            
+            return (
+              <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 font-sans">
+                <div className="bg-white max-w-2xl w-full rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+                  {/* Quiz Header */}
+                  <div className="bg-teal-600 p-6 text-white">
+                    <h2 className="text-2xl font-bold flex items-center gap-2">
+                      <Star className="fill-yellow-400 text-yellow-400" /> 
+                      Quiz: {currentSession.title}
+                    </h2>
+                    <p className="opacity-90 mt-2">Questão {currentQuestionIndex + 1} de {currentSession.questions.length}</p>
+                  </div>
+
+                  {/* Question Body */}
+                  <div className="p-6 md:p-8 flex-grow">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-6 leading-relaxed">
+                      {question.question}
+                    </h3>
+
+                    <div className="space-y-3">
+                      {question.options.map((option, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => !isAnswerChecked && setSelectedOption(idx)}
+                          className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex items-center justify-between group
+                            ${isAnswerChecked 
+                              ? (idx === question.correct 
+                                  ? "bg-green-100 border-green-500 text-green-900" 
+                                  : (idx === selectedOption ? "bg-red-100 border-red-500 text-red-900" : "bg-gray-50 border-gray-200 opacity-60"))
+                              : (selectedOption === idx 
+                                  ? "bg-teal-50 border-teal-500 shadow-md" 
+                                  : "bg-white border-gray-200 hover:border-teal-300 hover:bg-teal-50")
+                            }
+                          `}
+                          disabled={isAnswerChecked}
+                        >
+                          <span className="font-medium">{option}</span>
+                          {isAnswerChecked && idx === question.correct && <CheckCircle className="text-green-600" size={20}/>}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Footer Actions */}
+                  <div className="p-6 border-t bg-gray-50 flex justify-end">
+                    {!isAnswerChecked ? (
+                      <Button 
+                        onClick={checkAnswer} 
+                        disabled={selectedOption === null}
+                        variant="primary"
+                      >
+                        Confirmar Resposta
+                      </Button>
+                    ) : (
+                      <Button onClick={nextQuestion} variant={currentQuestionIndex < 2 ? "secondary" : "success"}>
+                        {currentQuestionIndex < 2 ? "Próxima Questão" : "Concluir Sessão"} <ArrowRight size={20} />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          if (screen === 'results') {
+            const totalQuestions = courseData.length * 3;
+            const percentage = Math.round((quizScore / totalQuestions) * 100);
+
+            return (
+              <div className="min-h-screen bg-gradient-to-br from-teal-500 to-purple-700 flex items-center justify-center p-4 font-sans">
+                <div className="bg-white max-w-2xl w-full rounded-3xl shadow-2xl p-8 md:p-12 text-center space-y-8 animate-fade-in-up">
+                  
+                  <div className="flex justify-center mb-6">
+                    <div className="bg-yellow-100 p-6 rounded-full inline-flex">
+                      <Trophy className="text-yellow-500 w-16 h-16 md:w-24 md:h-24 fill-current animate-bounce-slow" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">Parabéns!</h1>
+                    <h2 className="text-xl text-gray-600">Você concluiu o curso com sucesso.</h2>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                    <p className="text-sm text-gray-500 uppercase tracking-wide font-bold mb-2">Seu Aproveitamento</p>
+                    <div className="text-5xl font-black text-teal-600 mb-2">{percentage}%</div>
+                    <p className="text-gray-600">Você acertou <strong className="text-gray-900">{quizScore}</strong> de <strong className="text-gray-900">{totalQuestions}</strong> questões.</p>
+                  </div>
+
+                  <div className="bg-purple-50 p-6 rounded-xl text-left border-l-4 border-purple-500">
+                    <div className="flex items-start gap-3">
+                      <Heart className="text-purple-600 flex-shrink-0 mt-1 fill-purple-200" />
+                      <p className="text-gray-700 italic">
+                        "Lembre-se: a convivência com empatia e respeito é a chave para um mundo melhor. Use o que aprendeu aqui para cuidar de si e dos outros. Sua saúde mental e suas atitudes fazem a diferença!"
+                      </p>
+                    </div>
+                  </div>
+
+                  <Button onClick={restartCourse} variant="secondary" className="w-full md:w-auto mx-auto">
+                    <RefreshCw size={20} /> Reiniciar Curso
+                  </Button>
+                </div>
+              </div>
+            );
+          }
+
+          return null;
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
