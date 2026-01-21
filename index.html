@@ -72,6 +72,7 @@
             title: "Sessão 1: Bullying",
             videoId: "SykY6r3CDLg",
             imageId: "v8TTs4z",
+            quizBg: "https://i.imgur.com/HC9rTKN.png", 
             questions: [
               {
                 question: "O que caracteriza o bullying?",
@@ -110,6 +111,7 @@
             title: "Sessão 2: Saúde Mental e Cultura de Paz",
             videoId: "-HuzLjbNsPI",
             imageId: "p9FZR7v",
+            quizBg: "https://i.imgur.com/QP1ECX0.png",
             questions: [
               {
                 question: "O que é promover uma Cultura de Paz?",
@@ -148,6 +150,7 @@
             title: "Sessão 3: Tempos Atuais",
             videoId: "_GnBaUp9nOg",
             imageId: "agfnFbY",
+            quizBg: "https://i.imgur.com/DX1bZvu.png",
             questions: [
               {
                 question: "Nos tempos atuais, como muitas vezes reagimos sob pressão?",
@@ -186,6 +189,7 @@
             title: "Sessão 4: Assertividade",
             videoId: "xbwv1di9ynI",
             imageId: "1SQU2yo",
+            quizBg: "https://i.imgur.com/x5XpHo0.png",
             questions: [
               {
                 question: "O que significa ser assertivo?",
@@ -224,6 +228,7 @@
             title: "Sessão 5: Agressivo e Passivo",
             videoId: "FW9YHIbw0Eg",
             imageId: "LGQaCtc",
+            quizBg: "https://i.imgur.com/lsbC4nD.png",
             questions: [
               {
                 question: "Qual característica define o comportamento passivo?",
@@ -262,6 +267,7 @@
             title: "Sessão 6: Comunicação com Confiança",
             videoId: "pkWz0mp5r2E",
             imageId: "2monaHa",
+            quizBg: "https://i.imgur.com/6q6EfBM.png",
             questions: [
               {
                 question: "Para comunicar com confiança, é importante:",
@@ -300,6 +306,7 @@
             title: "Sessão 7: Como lidar com os conflitos",
             videoId: "bThLZOFJWVs",
             imageId: "EMPiCsl",
+            quizBg: "https://i.imgur.com/nVbV0CQ.png",
             questions: [
               {
                 question: "O conflito é:",
@@ -579,10 +586,23 @@
 
           if (screen === 'quiz') {
             const question = currentSession.questions[currentQuestionIndex];
+            const hasCustomBg = !!currentSession.quizBg;
             
             return (
-              <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 font-sans">
-                <div className="bg-white max-w-2xl w-full rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+              <div 
+                className={`min-h-screen flex items-center justify-center p-4 font-sans ${!hasCustomBg ? 'bg-slate-100' : 'relative'}`}
+                style={hasCustomBg ? {
+                    backgroundImage: `url('${currentSession.quizBg}')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundAttachment: 'fixed'
+                } : {}}
+              >
+                {/* Overlay escuro se houver imagem de fundo */}
+                {hasCustomBg && <div className="absolute inset-0 bg-black/50 z-0"></div>}
+                
+                {/* REMOVIDO: backdrop-blur-sm, mantido apenas bg-white/40 */}
+                <div className="bg-white/40 max-w-2xl w-full rounded-3xl shadow-2xl overflow-hidden flex flex-col relative z-10">
                   {/* Quiz Header */}
                   <div className="bg-teal-600 p-6 text-white">
                     <h2 className="text-2xl font-bold flex items-center gap-2">
