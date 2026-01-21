@@ -647,19 +647,42 @@
             const totalQuestions = courseData.length * 3;
             const percentage = Math.round((quizScore / totalQuestions) * 100);
 
+            let resultTitle = "";
+            let resultSubtitle = "";
+            let ResultIcon = Trophy; // Ícone padrão
+            let iconColor = "text-yellow-500";
+            let iconBg = "bg-yellow-100";
+
+            if (percentage >= 70) {
+              resultTitle = `Parabéns${userName ? `, ${userName}` : ''}!`;
+              resultSubtitle = "Você concluiu o curso com sucesso.";
+            } else if (percentage >= 50) {
+              resultTitle = `Boa tentativa${userName ? `, ${userName}` : ''}!`;
+              resultSubtitle = "Mas dá para melhorar. O que acha de refazer o curso?";
+              ResultIcon = Star; // Mudando ícone para contextualizar
+              iconColor = "text-blue-500";
+              iconBg = "bg-blue-100";
+            } else {
+              resultTitle = `Opa${userName ? `, ${userName}` : ''}!`;
+              resultSubtitle = "Parece que você se distraiu, hein? Acho melhor tentar de novo. 😉";
+              ResultIcon = RefreshCw; // Mudando ícone para contextualizar
+              iconColor = "text-orange-500";
+              iconBg = "bg-orange-100";
+            }
+
             return (
               <div className="min-h-screen bg-gradient-to-br from-teal-500 to-purple-700 flex items-center justify-center p-4 font-sans">
                 <div className="bg-white max-w-2xl w-full rounded-3xl shadow-2xl p-8 md:p-12 text-center space-y-8 animate-fade-in-up">
                   
                   <div className="flex justify-center mb-6">
-                    <div className="bg-yellow-100 p-6 rounded-full inline-flex">
-                      <Trophy className="text-yellow-500 w-16 h-16 md:w-24 md:h-24 fill-current animate-bounce-slow" />
+                    <div className={`${iconBg} p-6 rounded-full inline-flex`}>
+                      <ResultIcon className={`${iconColor} w-16 h-16 md:w-24 md:h-24 fill-current animate-bounce-slow`} />
                     </div>
                   </div>
 
                   <div>
-                    <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">Parabéns{userName ? `, ${userName}` : ''}!</h1>
-                    <h2 className="text-xl text-gray-600">Você concluiu o curso com sucesso.</h2>
+                    <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">{resultTitle}</h1>
+                    <h2 className="text-xl text-gray-600">{resultSubtitle}</h2>
                   </div>
 
                   <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
