@@ -39,12 +39,15 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- ÍCONES (SVG Inline para evitar dependências externas complexas) ---
+        // --- ÍCONES ---
         const Play = ({ size = 24, className = "" }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
         );
         const CheckCircle = ({ size = 24, className = "" }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        );
+        const XCircle = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
         );
         const ArrowRight = ({ size = 24, className = "" }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -64,6 +67,9 @@
         const Heart = ({ size = 24, className = "" }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
         );
+        const Info = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        );
 
         // --- DADOS DO CURSO ---
         const courseData = [
@@ -75,32 +81,32 @@
             quizBg: "https://i.imgur.com/HC9rTKN.png", 
             questions: [
               {
-                question: "O que caracteriza o bullying?",
+                question: "De acordo com o material, quais são os três elementos principais que, juntos, caracterizam uma situação de bullying?",
                 options: [
-                  "Uma brincadeira ocasional entre amigos.",
-                  "Agressões intencionais, verbais ou físicas, feitas de maneira repetitiva.",
-                  "Um desentendimento único por conta de um jogo.",
-                  "Elogios feitos de forma exagerada."
+                  { text: "Ser uma vítima passiva, agressiva ou provocativa.", feedback: "Não é bem isso. O material aponta estes como perfis de quem sofre a violência, e não como as características do ato de bullying em si." },
+                  { text: "Intenção de magoar, repetição da agressão e desequilíbrio de poder entre as partes.", feedback: "Resposta correta. Esta opção descreve os três critérios (intenção, repetição e desequilíbrio de poder) que são apresentados no texto como definidores do bullying." },
+                  { text: "Piadas ofensivas, boatos e exclusão de colegas.", feedback: "Não é bem isso. Estes são exemplos de atos que podem ocorrer no bullying, mas não são os três elementos conceituais que definem." },
+                  { text: "Tristeza, medo e baixo interesse nos estudos.", feedback: "Não é bem isso. Estes são possíveis efeitos e consequências sofridas pela pessoa em situação de violência, e não os componentes que caracterizam a ação de bullying." }
                 ],
                 correct: 1
               },
               {
-                question: "Quem participa do ciclo do bullying?",
+                question: "Em uma situação de bullying, o material descreve diferentes papéis para as testemunhas. Qual é a descrição da testemunha classificada como 'Observador'?",
                 options: [
-                  "Apenas a vítima e o agressor.",
-                  "Apenas a escola e os pais.",
-                  "O agressor, a vítima e os espectadores (testemunhas).",
-                  "Ninguém, é algo imaginário."
+                  { text: "Participa ativamente da agressão junto com o autor.", feedback: "Não é bem isso. Esse comportamento é característico dos “Auxiliares”, que incentivam o autor da agressão. O auxiliar participa ativamente da ação." },
+                  { text: "Afasta-se da situação ou finge que não está vendo a agressão acontecer.", feedback: "Isso mesmo. Esta descrição corresponde ao comportamento de quem se omite, que é a definição de “Observador”." },
+                  { text: "Incentiva a agressão, mesmo sem participar diretamente.", feedback: "Não é bem isso. Esse papel é dos “Incentivadores”, que estimulam a agressão com palavras e gestos." },
+                  { text: "Tenta ajudar a pessoa que está sofrendo com o bullying.", feedback: "Não é bem isso. Agir para ajudar a pessoa em situação de violência é papel dos “Defensores”." }
                 ],
-                correct: 2
+                correct: 1
               },
               {
-                question: "Qual é uma forma eficaz de combater o bullying?",
+                question: "O material sugere uma ação fundamental a ser tomada quando alguém percebe que 'algo não está bem' por causa de bullying ou outra violência. Qual é essa recomendação?",
                 options: [
-                  "Revidar com violência física.",
-                  "Ficar calado e ignorar.",
-                  "Acolher a vítima e buscar ajuda de adultos responsáveis.",
-                  "Rir da situação para não ser o próximo alvo."
+                  { text: "Ignorar o problema, esperando que ele desapareça com o tempo.", feedback: "Não é bem isso. A omissão pode permitir a violência continue e piore. A violência deixa marcas e precisa ser enfrentada." },
+                  { text: "Repetir com outras pessoas o que estão fazendo com você.", feedback: "Não é bem isso. Esse comportamento é uma ação agressiva, que se manifestar em algumas pessoas que vivenciaram situações de violência; contudo, não se trata de uma resposta ou solução construtiva." },
+                  { text: "Conversar com um adulto de confiança e procurar ajuda na escola ou na família.", feedback: "Isso mesmo. É importante romper o silêncio e buscar apoio em redes de segurança. Ninguém precisa passar por isso sozinho." },
+                  { text: "Tentar resolver o problema sozinho para mostrar força.", feedback: "Não é bem isso. Isolar-se e tentar lidar com a situação sem ajuda pode agravar as consequências negativas. Ninguém precisa passar por isso sozinho." }
                 ],
                 correct: 2
               }
@@ -114,34 +120,34 @@
             quizBg: "https://i.imgur.com/QP1ECX0.png",
             questions: [
               {
-                question: "O que é promover uma Cultura de Paz?",
+                question: "Imagine que um colega pegou seu lanche sem pedir. Considerando as formas de se comportar, qual seria uma resposta assertiva?",
                 options: [
-                  "Evitar qualquer tipo de conversa difícil.",
-                  "Resolver conflitos através do diálogo e respeito aos direitos humanos.",
-                  "Impor suas vontades para manter a ordem.",
-                  "Viver isolado para não ter problemas."
+                   { text: "Melhor seria ficar quieto na minha, sem dizer nada para não criar uma briga desnecessária.", feedback: "Não é bem isso. Esta atitude demonstra medo do confronto e dificuldade em expressar o próprio descontentamento, o que é típico do comportamento passivo." },
+                   { text: "Falar com o colega de forma educada, mas firme, explicando que você não gostou da atitude e pedindo que ele não faça mais isso.", feedback: "Isso mesmo! Esta opção demonstra a defesa dos próprios direitos com respeito pelo outro, buscando uma solução direta e sincera, que é a base da assertividade." },
+                   { text: "Mostrar que não está para brincadeiras e gritar com o colega para pegar o lanche de volta à força.", feedback: "Não é bem isso. Esta reação viola os direitos do colega ao usar a força e a gritaria, sendo uma característica do comportamento agressivo." },
+                   { text: "Relevar, mas depois quando tiver uma oportunidade fazer um comentário sarcástico sobre como algumas pessoas não têm educação.", feedback: "Não é bem isso. Esta forma de responder esconde a raiva por trás de palavras irônicas, expressando agressividade de maneira indireta e causando confusão." }
                 ],
                 correct: 1
               },
               {
-                question: "A saúde mental está relacionada a:",
+                question: "De acordo com os Direitos Humanos e o princípio de respeitar a si mesmo, qual das seguintes atitudes é um direito seu em qualquer relação, seja com amigos ou família?",
                 options: [
-                  "Apenas não ter doenças mentais.",
-                  "Estar feliz 100% do tempo.",
-                  "Equilíbrio emocional e capacidade de lidar com as tensões da vida.",
-                  "Ter notas altas na escola."
+                  { text: "Exigir que suas necessidades sejam sempre atendidas pelos outros.", feedback: "Não é bem isso. Pedir que suas necessidades sejam consideradas é um direito, mas exigi-las sem considerar o outro não é, pois a outra pessoa também tem o direito de dizer não." },
+                  { text: "Mudar de ideia apenas se a outra pessoa concordar.", feedback: "Não é bem isso. O direito de mudar de ideia não depende da aprovação de outras pessoas; é uma decisão pessoal e um ato de autorrespeito." },
+                  { text: "Evitar expressar seus sentimentos para não incomodar ninguém.", feedback: "Não é bem isso. Expressar sentimentos e opiniões de forma respeitosa é um direito importante para a saúde mental e para relacionamentos honestos." },
+                  { text: "Dizer 'não' a um pedido, sem precisar se sentir culpado por isso.", feedback: "Resposta correta. Estabelecer limites e dizer 'não' de forma respeitosa é um direito fundamental para o autorrespeito, conforme apresentado nos materiais sobre direitos humanos básicos." }
                 ],
-                correct: 2
+                correct: 3
               },
               {
-                question: "Qual comportamento ajuda na boa convivência?",
+                question: "Qual é uma consequência comum para uma pessoa que demonstra comportamento agressivo, segundo a apresentação?",
                 options: [
-                  "Escuta ativa e empatia.",
-                  "Julgamento precipitado.",
-                  "Indiferença.",
-                  "Agressividade verbal."
+                  { text: "A dificuldade em se defender e um misto de sentimentos como frustração e tristeza.", feedback: "Não é bem isso. Essas são consequências típicas do comportamento passivo, no qual a pessoa não expressa suas necessidades e sentimentos." },
+                  { text: "O afastamento dos colegas e a criação de um clima ruim nas relações.", feedback: "Resposta correta. O comportamento agressivo tende a gerar conflitos e desrespeito, o que leva ao distanciamento social e a um ambiente negativo." },
+                  { text: "A capacidade de fazer com que todos sempre concordem com suas ideias.", feedback: "Não é bem isso. Embora a pessoa com comportamento agressivo tente impor suas ideias, isso geralmente gera discordância e conflito, não concordância genuína." },
+                  { text: "O fortalecimento das amizades e a resolução de problemas de forma eficaz.", feedback: "Não é bem isso. Estes são resultados positivos associados ao comportamento assertivo, que promove relacionamentos saudáveis." }
                 ],
-                correct: 0
+                correct: 1
               }
             ]
           },
@@ -153,34 +159,34 @@
             quizBg: "https://i.imgur.com/DX1bZvu.png",
             questions: [
               {
-                question: "Nos tempos atuais, como muitas vezes reagimos sob pressão?",
+                question: "O texto explica que, na internet, reações explosivas e ataques muitas vezes recebem mais atenção. Qual dos fatores abaixo ajuda a explicar por que isso acontece?",
                 options: [
-                  "Sempre com total calma.",
-                  "Frequentemente com reações de 'luta ou fuga' (ataque ou defesa).",
-                  "Dormindo imediatamente.",
-                  "Ignorando a tecnologia."
-                ],
-                correct: 1
-              },
-              {
-                question: "Reconhecer suas emoções é um sinal de:",
-                options: [
-                  "Fraqueza.",
-                  "Perda de tempo.",
-                  "Autoconhecimento e inteligência emocional.",
-                  "Egoísmo."
+                  { text: "O fato de que diálogos calmos e respeitosos geram mais engajamento online do que discussões.", feedback: "Não é bem isso. O material explica que, na verdade, conflitos e ataques tendem a gerar mais engajamento (curtidas, comentários) do que conversas tranquilas." },
+                  { text: "A preferência geral das pessoas por conteúdos que exigem muita reflexão e tempo para serem entendidos.", feedback: "Não é bem isso. A 'cultura da instantaneidade' mencionada no texto valoriza respostas rápidas e emocionais, havendo pouco espaço para uma reflexão demorada." },
+                  { text: "O funcionamento das redes sociais, que recompensa polêmicas com mais visibilidade (curtidas e compartilhamentos).", feedback: "Resposta correta. Este comportamento é reforçado porque as plataformas digitais frequentemente dão mais destaque a conteúdos que geram muitas interações, como os polêmicos." },
+                  { text: "A falta de interesse das pessoas em usar a internet para se comunicar com os outros.", feedback: "Não é bem isso. O texto sugere o contrário, que o maior acesso à internet deu às pessoas um novo e amplo espaço para se manifestarem." }
                 ],
                 correct: 2
               },
               {
-                question: "O excesso de estímulos digitais pode causar:",
+                question: "O que é o 'efeito manada', de acordo com o material fornecido?",
                 options: [
-                  "Aumento da ansiedade e dificuldade de concentração.",
-                  "Paz interior absoluta.",
-                  "Melhora imediata no sono.",
-                  "Fim de todos os conflitos."
+                  { text: "Um método para analisar informações de forma cuidadosa e lenta antes de tomar uma decisão.", feedback: "Não é bem isso. O texto aponta que o efeito manada ocorre na ausência de uma análise crítica própria, funcionando como um atalho para economizar energia na decisão." },
+                  { text: "Uma estratégia para criar conflitos e polêmicas de propósito nas redes sociais para ganhar seguidores.", feedback: "Não é bem isso. Embora o efeito manada possa levar à participação em polêmicas, sua definição é sobre seguir a maioria, não necessariamente sobre iniciar conflitos intencionalmente." },
+                  { text: "Um fenômeno onde as pessoas seguem o comportamento da maioria sem pensar criticamente, para se sentirem parte do grupo.", feedback: "Resposta correta. Essa definição corresponde ao que o texto descreve como um comportamento de seguir um grupo, agindo por instinto de proteção ou pertencimento." },
+                  { text: "Uma forma de expressar opiniões de maneira individual e autêntica, mesmo que ninguém concorde.", feedback: "Não é bem isso. O efeito manada é justamente o oposto, pois envolve seguir o comportamento do grupo em vez de manter uma posição individual e única." }
                 ],
-                correct: 0
+                correct: 2
+              },
+              {
+                question: "Segundo o texto, agir com assertividade em um ambiente online que incentiva ataques é um 'ato de coragem'. O que significa ser assertivo nesse contexto?",
+                options: [
+                  { text: "Ficar em silêncio e usar a indiferença para mostrar que a outra pessoa está errada.", feedback: "Não é bem isso. O texto classifica o silêncio e a indiferença como manifestações passivo-agressivas, que também machucam e confundem." },
+                  { text: "Expressar o que você sente e colocar limites, mas sem humilhar ou desrespeitar a outra pessoa.", feedback: "Resposta correta. Isso captura a essência da assertividade descrita: a coragem de se comunicar de forma clara e respeitosa, defendendo seu ponto de vista sem agredir." },
+                  { text: "Reagir de forma explosiva e imediata para mostrar força e não deixar que outros passem por cima de você.", feedback: "Não é bem isso. O material aponta que uma reação explosiva demonstra falta de controle e dificuldade em lidar com sentimentos, e não força." },
+                  { text: "Concordar com a maioria para evitar conflitos e garantir o pertencimento ao grupo.", feedback: "Não é bem isso. Esta atitude está mais alinhada ao 'efeito manada', que é a tendência de seguir o grupo para ser aceito, e não à assertividade." }
+                ],
+                correct: 1
               }
             ]
           },
@@ -192,34 +198,34 @@
             quizBg: "https://i.imgur.com/x5XpHo0.png",
             questions: [
               {
-                question: "O que significa ser assertivo?",
+                question: "Imagine que um colega pegou seu estojo sem pedir permissão. Qual seria a forma mais assertiva de lidar com essa situação?",
                 options: [
-                  "Falar gritando para ser ouvido.",
-                  "Não expressar sua opinião para não chatear os outros.",
-                  "Expressar seus sentimentos e direitos com clareza, sem agredir o outro.",
-                  "Manipular as pessoas para conseguir o que quer."
+                  { text: "Pegar o estojo de volta com raiva e dizer para ele nunca mais fazer isso.", feedback: "Não é bem isso. Essa reação expressa o descontentamento de forma agressiva, o que pode gerar um conflito maior em vez de resolvê-lo pacificamente." },
+                  { text: "Comentar com outro amigo sobre como seu colega é folgado.", feedback: "Não é bem isso. Essa atitude é considerada passivo-agressiva, pois não resolve o problema diretamente com a pessoa envolvida." },
+                  { text: "Dizer com calma: 'Eu vou precisar do meu estojo agora. Na próxima vez, por favor, me peça antes de pegar.'", feedback: "Resposta correta. Essa resposta comunica sua necessidade de forma clara e firme, estabelecendo um limite sem desrespeitar o colega." },
+                  { text: "Não dizer nada para não criar uma briga, mesmo que você precise do estojo.", feedback: "Não é bem isso. Essa é uma postura passiva, que ignora suas próprias necessidades e sentimentos, o que não é o objetivo da assertividade." }
                 ],
                 correct: 2
               },
               {
-                question: "Na escola, a assertividade ajuda a:",
+                question: "Qual das seguintes características descreve melhor uma pessoa com comportamento assertivo, de acordo com o material?",
                 options: [
-                  "Criar inimizades.",
-                  "Estabelecer limites saudáveis e melhorar o aprendizado.",
-                  "Dominar os colegas.",
-                  "Faltar às aulas sem justificativa."
+                  { text: "Tem a necessidade de ser agressiva para se impor e mostrar quem manda.", feedback: "Não é bem isso. A assertividade é o oposto da agressividade; ela busca o respeito mútuo, e não a dominação." },
+                  { text: "Acredita que é melhor ficar em silêncio para evitar qualquer tipo de conflito.", feedback: "Não é bem isso. Ficar em silêncio quando algo incomoda é um comportamento passivo, não assertivo. A assertividade encoraja a comunicação." },
+                  { text: "Busca preservar seus relacionamentos, mesmo durante desentendimentos.", feedback: "Resposta correta. Uma das características da assertividade é a tendência a manter os vínculos, pois o objetivo é resolver o problema, e não atacar a pessoa." },
+                  { text: "Sente um forte impulso de dar o troco quando se sente prejudicada.", feedback: "Não é bem isso. O texto indica que uma pessoa assertiva possui um menor impulso de vingança, pois foca na solução e não na retaliação." }
                 ],
-                correct: 1
+                correct: 2
               },
               {
-                question: "Dizer 'não' quando necessário é:",
+                question: "Durante um debate em sala de aula, você discorda da opinião de um colega. Qual é a maneira assertiva de expressar seu ponto de vista?",
                 options: [
-                  "Uma falta de educação.",
-                  "Um direito assertivo.",
-                  "Proibido entre amigos.",
-                  "Um sinal de agressividade."
+                  { text: "Ficar quieto e concordar, mesmo pensando diferente, para a aula continuar logo.", feedback: "Não é bem isso. Essa é uma atitude passiva que não contribui para a discussão e invalida seus próprios pensamentos." },
+                  { text: "Dizer: 'O que você falou está completamente errado e não faz o menor sentido.'", feedback: "Não é bem isso. Essa forma de se expressar ataca a opinião do outro de maneira agressiva, desvalorizando o que foi dito." },
+                  { text: "Ignorar a opinião do colega e começar a falar sobre outro assunto.", feedback: "Não é bem isso. Mudar de assunto sem reconhecer o que foi dito pode ser desrespeitoso e não é uma forma construtiva de participar do debate." },
+                  { text: "Dizer: 'Eu tenho uma perspectiva diferente. Para mim, a questão é...'", feedback: "Resposta correta. Esta resposta valida seu próprio ponto de vista usando uma frase com 'eu', sem atacar a opinião do colega, demonstrando respeito." }
                 ],
-                correct: 1
+                correct: 3
               }
             ]
           },
@@ -231,32 +237,32 @@
             quizBg: "https://i.imgur.com/lsbC4nD.png",
             questions: [
               {
-                question: "Qual característica define o comportamento passivo?",
+                question: "Qual das seguintes atitudes é um exemplo de comportamento passivo-agressivo, de acordo com o material?",
                 options: [
-                  "Explosões de raiva.",
-                  "Dificuldade em dizer não e colocar as necessidades dos outros acima das suas.",
-                  "Falar com clareza e firmeza.",
-                  "Desrespeitar os direitos alheios."
+                  { text: "Gritar ou xingar durante uma discussão.", feedback: "Não é bem isso. Esta é uma manifestação direta e aberta de hostilidade, característica do comportamento agressivo, e não do passivo-agressivo." },
+                  { text: "Tentar impor sua opinião sobre a dos outros.", feedback: "Não é bem isso. A tentativa de mandar ou intimidar é uma forma de agressividade explícita, que busca o controle de maneira direta." },
+                  { text: "Usar sarcasmo e ignorar um colega de propósito.", feedback: "Resposta correta. O comportamento passivo-agressivo se manifesta de forma indireta e velada, como através da ironia ou do silêncio intencional." },
+                  { text: "Conversar para resolver um desentendimento.", feedback: "Não é bem isso. O diálogo é uma forma construtiva de lidar com conflitos e não se enquadra em um comportamento agressivo." }
+                ],
+                correct: 2
+              },
+              {
+                question: "Segundo o texto, um adolescente que age de forma agressiva pode acreditar que está ganhando algo, como respeito. Qual é uma das perdas reais que esse comportamento pode causar a longo prazo?",
+                options: [
+                  { text: "Um sentimento verdadeiro e duradouro de segurança.", feedback: "Não é bem isso. O texto afirma que a agressividade pode funcionar como uma armadura, mas o que parece controle, muitas vezes é medo e insegurança." },
+                  { text: "O afastamento dos colegas e a falta de confiança.", feedback: "Resposta correta. Comportamentos agressivos constantes geram um clima ruim e fazem com que as pessoas percam a confiança e se distanciem." },
+                  { text: "A admiração e a liderança natural da turma.", feedback: "Não é bem isso. O material explica que muitos confundem intimidação com respeito, mas o resultado real é o afastamento, não a admiração." },
+                  { text: "A solução rápida e mais eficaz do problema que te preocupa.", feedback: "Não é bem isso. Gritar ou ofender pode dar uma descarga momentânea da emoção, mas não resolve a raiz do problema, podendo até aumentá-lo." }
                 ],
                 correct: 1
               },
               {
-                question: "O comportamento agressivo geralmente gera:",
+                question: "O material sugere que o comportamento agressivo muitas vezes é uma fachada. O que a frase 'O que parece força, muitas vezes é insegurança' significa nesse contexto?",
                 options: [
-                  "Medo, afastamento e mais violência.",
-                  "Respeito genuíno e admiração.",
-                  "Paz e harmonia.",
-                  "Colaboração da equipe."
-                ],
-                correct: 0
-              },
-              {
-                question: "O objetivo é sair dos extremos (passivo/agressivo) e buscar:",
-                options: [
-                  "A indiferença.",
-                  "O isolamento.",
-                  "O equilíbrio assertivo.",
-                  "A vingança."
+                  { text: "Que apenas pessoas que se sentem inseguras são capazes de ficar com raiva.", feedback: "Não é bem isso. O texto diferencia a raiva (uma emoção que todos podem sentir) da agressividade (o comportamento), que pode ser uma forma prejudicial de expressar essa raiva." },
+                  { text: "Que a agressividade é a maneira mais eficaz de demonstrar autoconfiança.", feedback: "Não é bem isso. O material aponta justamente o contrário, conectando a necessidade de ser agressivo à falta de segurança em si mesmo." },
+                  { text: "Que o autor da agressão pode usar atitudes hostis para esconder sentimentos de medo ou baixa autoestima.", feedback: "Resposta correta. Essa afirmação resume a ideia de que a agressividade pode funcionar como uma 'armadura emocional' para proteger uma vulnerabilidade interna." },
+                  { text: "Que pessoas fisicamente mais fortes são naturalmente mais agressivas.", feedback: "Não é bem isso. O texto aborda a agressividade como um comportamento influenciado por fatores psicológicos e sociais, não por características físicas." }
                 ],
                 correct: 2
               }
@@ -266,36 +272,36 @@
             id: 6,
             title: "Sessão 6: Comunicação com Confiança",
             videoId: "pkWz0mp5r2E",
-            imageId: "2monaHa",
+            imageId: "yewRiK0",
             quizBg: "https://i.imgur.com/6q6EfBM.png",
             questions: [
               {
-                question: "Para comunicar com confiança, é importante:",
+                question: "Você precisa da resposta de um colega sobre uma parte importante de um trabalho escolar. Você manda mensagem, vê que a pessoa está online, mas ela te ignora de propósito. Qual a atitude mais assertiva a tomar?",
                 options: [
-                  "Olhar para o chão enquanto fala.",
-                  "Manter contato visual e tom de voz adequado.",
-                  "Falar o mais rápido possível.",
-                  "Usar gírias ofensivas."
+                  { text: "Decidir ignorar a pessoa de volta na próxima vez que ela precisar de algo seu.", feedback: "Não é bem isso. Pagar na mesma moeda, apesar de parecer justo, é uma forma de comunicação passiva ou passivo-agressiva que não resolve a questão atual." },
+                  { text: "Não dizer nada e simplesmente fazer a parte do trabalho que cabia ao colega para não se prejudicar.", feedback: "Não é bem isso. Assumir a responsabilidade do outro sem comunicar o problema é uma resposta passiva que pode levar à sobrecarga e ao ressentimento." },
+                  { text: "Enviar várias mensagens seguidas, cobrando uma resposta, ou reclamar da atitude da pessoa no grupo da turma.", feedback: "Não é bem isso. Pressionar ou expor o colega publicamente são reações agressivas que podem piorar a relação e dificultar a colaboração." },
+                  { text: "Procurar a pessoa e, com calma, dizer: 'Percebi que você não respondeu minha mensagem. Aconteceu algo? Precisamos definir isso para o trabalho.'.", feedback: "Resposta correta. Essa abordagem descreve o fato (mensagem não respondida), expressa sua necessidade e abre espaço para o diálogo sem fazer acusações." }
                 ],
-                correct: 1
+                correct: 3
               },
               {
-                question: "A linguagem corporal (postura, gestos):",
+                question: "Durante a apresentação de um trabalho em grupo, um colega percebe um erro, levanta a voz e culpa você na frente de toda a turma. Qual seria uma forma assertiva de responder a essa situação?",
                 options: [
-                  "Não importa na comunicação.",
-                  "Diz muito sobre como nos sentimos e reforça nossa mensagem.",
-                  "Só é importante para atores.",
-                  "Deve ser rígida e imóvel."
+                  { text: "Levantar a voz de volta, dizendo que o erro não foi só seu e que ele não deveria expor você daquela forma.", feedback: "Não é bem isso. Responder com agressividade pode iniciar uma briga e piorar a situação, afastando a possibilidade de uma solução respeitosa." },
+                  { text: "Ficar em silêncio, com vergonha, e não dizer nada para evitar mais conflito, mas procurar o professor em outro momento no particular para dizer que na verdade a culpa foi do colega.", feedback: "Não é bem isso. Essa reação passiva desconsidera seus próprios sentimentos e permite que o desrespeito continue sem ser abordado." },
+                  { text: "Ignorar o comentário na hora e, mais tarde, reclamar do colega para os outros membros do grupo, comentando sua atitude.", feedback: "Não é bem isso. Essa é uma forma passivo-agressiva de lidar com o problema, pois evita o confronto direto mas gera fofoca e não resolve a questão com a pessoa envolvida." },
+                  { text: "Dizer com calma: 'Entendo que você está frustrado(a), mas peço que não levante sua voz comigo. Podemos conversar sobre isso com mais calma depois da apresentação para resolvermos.'", feedback: "Resposta correta. Esta abordagem reconhece o sentimento do outro, estabelece um limite claro de como você deseja ser tratado(a) e propõe uma solução construtiva." }
                 ],
-                correct: 1
+                correct: 3
               },
               {
-                question: "Confiança na comunicação significa:",
+                question: "Você está animado(a) com uma roupa nova, mas um(a) colega olha para você e diz com um tom de deboche: \"Nossa, que original... de onde você tirou essa ideia?\". Como você poderia reagir de maneira assertiva?",
                 options: [
-                  "Saber que você é melhor que os outros.",
-                  "Acreditar na sua própria voz e no direito de ser ouvido.",
-                  "Nunca aceitar críticas.",
-                  "Falar alto o tempo todo."
+                  { text: "Responder com sarcasmo também, como: \"Do mesmo lugar onde você tirou a sua simpatia, que claramente ficou em casa hoje.\"", feedback: "Não é bem isso. Usar a mesma ironia como contra-ataque transforma a conversa em uma disputa, em vez de esclarecer a situação." },
+                  { text: "Perguntar de forma direta e neutra: \"Não tenho certeza do que você quis dizer com esse comentário. Foi um elogio ou uma crítica?\"", feedback: "Resposta correta. Esta resposta quebra o ciclo da ironia ao pedir clareza, mostrando que você percebeu a ambiguidade e quer entender a real intenção." },
+                  { text: "Ofender a roupa do(a) colega, dizendo: \"Pelo menos eu tento ser diferente, não uso sempre a mesma coisa que todo mundo.\"", feedback: "Não é bem isso. Reagir com um ataque direto é uma resposta agressiva que desvia o foco do comentário original e inicia um novo conflito." },
+                  { text: "Fingir que não ouviu o comentário e guardar para si o sentimento, então esperar a primeira oportunidade para devolver com um comentário ainda mais sarcástico ao(à) mesmo(a) colega.", feedback: "Não é bem isso. Essa reação passiva ignora o comentário, mas permite que a ofensa indireta afete seus sentimentos." }
                 ],
                 correct: 1
               }
@@ -309,34 +315,34 @@
             quizBg: "https://i.imgur.com/nVbV0CQ.png",
             questions: [
               {
-                question: "O conflito é:",
+                question: "Qual é a principal diferença entre um conflito saudável e um conflito prejudicial (que faz mal)?",
                 options: [
-                  "Sempre algo ruim e destrutivo.",
-                  "Algo natural da convivência que pode ser uma oportunidade de crescimento.",
-                  "Algo que deve ser evitado a qualquer custo.",
-                  "Prova de que as pessoas não se gostam."
+                  { text: "Conflitos saudáveis só acontecem com a família, e os prejudiciais acontecem com pessoas de fora.", feedback: "Não é bem isso. O tipo de conflito depende de como ele é gerenciado, e não das pessoas envolvidas; conflitos de ambos os tipos podem ocorrer em qualquer relação." },
+                  { text: "Conflitos saudáveis são sempre silenciosos, e os prejudiciais são sempre com gritos.", feedback: "Não é bem isso. O volume da conversa não define se o conflito é saudável; o mais importante é a intenção e o respeito na comunicação." },
+                  { text: "Em um conflito saudável, as pessoas sempre concordam no final, e no prejudicial, elas continuam discordando.", feedback: "Não é bem isso. O objetivo de um conflito saudável é chegar a uma solução, o que pode envolver um acordo ou um entendimento, mas não necessariamente concordância total." },
+                  { text: "O conflito saudável foca em encontrar uma solução com respeito, enquanto o prejudicial envolve ataques pessoais.", feedback: "Resposta correta. O texto diferencia os dois tipos de conflito pela abordagem: o saudável busca solução com respeito, enquanto o prejudicial é marcado por ataques e desrespeito." }
                 ],
-                correct: 1
+                correct: 3
               },
               {
-                question: "Uma boa estratégia para resolver conflitos é:",
+                question: "O texto dá dicas de como lidar com desentendimentos. Se você está no meio de uma discussão que está ficando muito nervosa, qual é uma boa estratégia?",
                 options: [
-                  "Ganhar a discussão a qualquer preço.",
-                  "Buscar soluções onde todos ganham (ganha-ganha).",
-                  "Ignorar a pessoa para sempre.",
-                  "Fazer fofoca sobre o ocorrido."
+                  { text: "Sugerir uma pausa por um momento para todo mundo se acalmar e pensar melhor.", feedback: "Resposta correta. O material sugere explicitamente se afastar momentaneamente para evitar que a discussão saia do controle." },
+                  { text: "Tentar ganhar a discussão trazendo à tona todos os erros que a outra pessoa cometeu no passado.", feedback: "Não é bem isso. Lembrar de erros passados provavelmente vai piorar a situação, algo que o texto aconselha evitar ao sugerir que se evite a escalada do conflito." },
+                  { text: "Ignorar o que a outra pessoa está dizendo e apenas repetir o seu ponto de vista várias vezes.", feedback: "Não é bem isso. Isso mostra uma falha na comunicação e na escuta, que são causas de conflitos prejudiciais, em vez de uma solução." },
+                  { text: "Ficar em silêncio e fingir que o problema não existe para a discussão acabar logo.", feedback: "Não é bem isso. Evitar o problema não o resolve; o texto incentiva a comunicação aberta para encontrar a raiz do desentendimento." }
                 ],
-                correct: 1
+                correct: 0
               },
               {
-                question: "Para 'mandar bem' nos conflitos, devemos:",
+                question: "Se você está em um desentendimento com alguém, qual das seguintes ações é o primeiro passo recomendado pelo texto para lidar com a situação de forma saudável?",
                 options: [
-                  "Agir por impulso.",
-                  "Controlar as emoções e focar no problema, não na pessoa.",
-                  "Atacar a personalidade do outro.",
-                  "Chamar mais gente para a briga."
+                  { text: "Focar em provar que você está certo e que a outra pessoa está errada.", feedback: "Não é bem isso. Um conflito saudável, de acordo com o material, busca soluções e entendimento, não apontar um vencedor na discussão." },
+                  { text: "Contar para todos os seus outros amigos a sua versão da história para ver quem concorda com você.", feedback: "Não é bem isso. Apesar de o texto mencionar que conversar com alguém de confiança pode ajudar, a primeira etapa sugerida é a comunicação direta com a pessoa envolvida." },
+                  { text: "Ignorar o problema e esperar que a outra pessoa peça desculpas primeiro.", feedback: "Não é bem isso. O texto sugere que conflitos não gerenciados podem piorar, em vez de se resolverem sozinhos com o tempo." },
+                  { text: "Expressar de forma amigável o que está incomodando e também ouvir o lado da outra pessoa.", feedback: "Resposta correta. Esta opção reflete diretamente a primeira dica de 'Como Lidar com Conflitos', que é a comunicação aberta e a escuta." }
                 ],
-                correct: 1
+                correct: 3
               }
             ]
           }
@@ -609,7 +615,6 @@
                 
                 {/* Conteúdo centralizado */}
                 <div className="flex-grow flex items-center justify-center p-4 relative z-10 w-full">
-                  {/* Alterado de bg-white/40 para bg-white/30 */}
                   <div className="bg-white/30 max-w-2xl w-full rounded-3xl shadow-2xl overflow-hidden flex flex-col">
                     {/* Quiz Header */}
                     <div className="bg-teal-600 p-6 text-white">
@@ -620,7 +625,7 @@
                       <p className="opacity-90 mt-2">Questão {currentQuestionIndex + 1} de {currentSession.questions.length}</p>
                     </div>
 
-                    {/* Question Body - Alterado de bg-white/40 para bg-white/30 */}
+                    {/* Question Body */}
                     <div className="p-6 md:p-8 flex-grow bg-white/30">
                       <h3 className="text-xl font-semibold text-gray-800 mb-6 leading-relaxed">
                         {question.question}
@@ -643,11 +648,34 @@
                             `}
                             disabled={isAnswerChecked}
                           >
-                            <span className="font-medium">{option}</span>
-                            {isAnswerChecked && idx === question.correct && <CheckCircle className="text-green-600" size={20}/>}
+                            <span className="font-medium">{option.text}</span>
+                            {isAnswerChecked && idx === question.correct && <CheckCircle className="text-green-600 flex-shrink-0" size={24}/>}
+                            {isAnswerChecked && idx === selectedOption && idx !== question.correct && <XCircle className="text-red-600 flex-shrink-0" size={24}/>}
                           </button>
                         ))}
                       </div>
+
+                      {/* ÁREA DE FEEDBACK ADICIONADA */}
+                      {isAnswerChecked && selectedOption !== null && (
+                        <div className={`mt-6 p-4 rounded-xl border-l-4 animate-fade-in-up ${
+                          selectedOption === question.correct 
+                            ? "bg-green-50 border-green-500 text-green-900" 
+                            : "bg-orange-50 border-orange-500 text-orange-900"
+                        }`}>
+                          <div className="flex items-start gap-3">
+                            <Info className="flex-shrink-0 mt-1" />
+                            <div>
+                              <p className="font-bold mb-1">
+                                {selectedOption === question.correct ? "Resposta Correta!" : "Feedback:"}
+                              </p>
+                              <p className="text-sm md:text-base leading-relaxed">
+                                {question.options[selectedOption].feedback}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                     </div>
 
                     {/* Footer Actions */}
@@ -669,7 +697,6 @@
                   </div>
                 </div>
 
-                {/* Alterado: removido backdrop-blur-sm do footer */}
                 <Footer className={`relative z-10 ${hasCustomBg ? 'text-white/90 bg-black/40' : 'text-gray-600 bg-gray-100'}`} />
               </div>
             );
