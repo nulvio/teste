@@ -373,6 +373,18 @@
           );
         };
 
+        // Componente Footer Reutilizável
+        const Footer = ({ className = "" }) => (
+          <footer className={`w-full py-4 text-center px-4 text-xs md:text-sm ${className}`}>
+            <p>
+              Curso Educativo para Adolescentes desenvolvido para o Programa Saúde na Escola do Município de Florianópolis
+            </p>
+            <p className="mt-1">
+              © Prefeitura Municipal de Florianópolis - Secretaria Municipal de Saúde.
+            </p>
+          </footer>
+        );
+
         // --- APP PRINCIPAL ---
 
         function App() {
@@ -494,14 +506,7 @@
                   </div>
                 </div>
                 
-                <footer className="absolute bottom-4 text-white/70 text-xs md:text-sm text-center px-4 max-w-5xl">
-                  <p>
-                    Curso Educativo para Adolescentes desenvolvido para o Programa Saúde na Escola do Município de Florianópolis
-                  </p>
-                  <p className="mt-1">
-                    © Prefeitura Municipal de Florianópolis - Secretaria Municipal de Saúde.
-                  </p>
-                </footer>
+                <Footer className="absolute bottom-4 text-white/70" />
               </div>
             );
           }
@@ -580,6 +585,7 @@
                     </Button>
                   </div>
                 </main>
+                <Footer className="bg-gray-100 text-gray-600 border-t border-gray-200" />
               </div>
             );
           }
@@ -590,7 +596,7 @@
             
             return (
               <div 
-                className={`min-h-screen flex items-center justify-center p-4 font-sans ${!hasCustomBg ? 'bg-slate-100' : 'relative'}`}
+                className={`min-h-screen flex flex-col font-sans ${!hasCustomBg ? 'bg-slate-100' : 'relative'}`}
                 style={hasCustomBg ? {
                     backgroundImage: `url('${currentSession.quizBg}')`,
                     backgroundSize: 'cover',
@@ -601,64 +607,70 @@
                 {/* Overlay escuro se houver imagem de fundo */}
                 {hasCustomBg && <div className="absolute inset-0 bg-black/50 z-0"></div>}
                 
-                {/* REMOVIDO: backdrop-blur-sm, mantido apenas bg-white/40 */}
-                <div className="bg-white/40 max-w-2xl w-full rounded-3xl shadow-2xl overflow-hidden flex flex-col relative z-10">
-                  {/* Quiz Header */}
-                  <div className="bg-teal-600 p-6 text-white">
-                    <h2 className="text-2xl font-bold flex items-center gap-2">
-                      <Star className="fill-yellow-400 text-yellow-400" /> 
-                      Quiz: {currentSession.title}
-                    </h2>
-                    <p className="opacity-90 mt-2">Questão {currentQuestionIndex + 1} de {currentSession.questions.length}</p>
-                  </div>
+                {/* Conteúdo centralizado */}
+                <div className="flex-grow flex items-center justify-center p-4 relative z-10 w-full">
+                  {/* Alterado de bg-white/40 para bg-white/30 */}
+                  <div className="bg-white/30 max-w-2xl w-full rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+                    {/* Quiz Header */}
+                    <div className="bg-teal-600 p-6 text-white">
+                      <h2 className="text-2xl font-bold flex items-center gap-2">
+                        <Star className="fill-yellow-400 text-yellow-400" /> 
+                        Quiz: {currentSession.title}
+                      </h2>
+                      <p className="opacity-90 mt-2">Questão {currentQuestionIndex + 1} de {currentSession.questions.length}</p>
+                    </div>
 
-                  {/* Question Body */}
-                  <div className="p-6 md:p-8 flex-grow">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-6 leading-relaxed">
-                      {question.question}
-                    </h3>
+                    {/* Question Body - Alterado de bg-white/40 para bg-white/30 */}
+                    <div className="p-6 md:p-8 flex-grow bg-white/30">
+                      <h3 className="text-xl font-semibold text-gray-800 mb-6 leading-relaxed">
+                        {question.question}
+                      </h3>
 
-                    <div className="space-y-3">
-                      {question.options.map((option, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => !isAnswerChecked && setSelectedOption(idx)}
-                          className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex items-center justify-between group
-                            ${isAnswerChecked 
-                              ? (idx === question.correct 
-                                  ? "bg-green-100 border-green-500 text-green-900" 
-                                  : (idx === selectedOption ? "bg-red-100 border-red-500 text-red-900" : "bg-gray-50 border-gray-200 opacity-60"))
-                              : (selectedOption === idx 
-                                  ? "bg-teal-50 border-teal-500 shadow-md" 
-                                  : "bg-white border-gray-200 hover:border-teal-300 hover:bg-teal-50")
-                            }
-                          `}
-                          disabled={isAnswerChecked}
+                      <div className="space-y-3">
+                        {question.options.map((option, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => !isAnswerChecked && setSelectedOption(idx)}
+                            className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex items-center justify-between group
+                              ${isAnswerChecked 
+                                ? (idx === question.correct 
+                                    ? "bg-green-100/90 border-green-500 text-green-900" 
+                                    : (idx === selectedOption ? "bg-red-100/90 border-red-500 text-red-900" : "bg-white/60 border-gray-200 opacity-60"))
+                                : (selectedOption === idx 
+                                    ? "bg-teal-50/90 border-teal-500 shadow-md" 
+                                    : "bg-white/80 border-gray-200 hover:border-teal-300 hover:bg-teal-50")
+                              }
+                            `}
+                            disabled={isAnswerChecked}
+                          >
+                            <span className="font-medium">{option}</span>
+                            {isAnswerChecked && idx === question.correct && <CheckCircle className="text-green-600" size={20}/>}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Footer Actions */}
+                    <div className="p-6 border-t border-gray-200/50 bg-gray-50/80 flex justify-end">
+                      {!isAnswerChecked ? (
+                        <Button 
+                          onClick={checkAnswer} 
+                          disabled={selectedOption === null}
+                          variant="primary"
                         >
-                          <span className="font-medium">{option}</span>
-                          {isAnswerChecked && idx === question.correct && <CheckCircle className="text-green-600" size={20}/>}
-                        </button>
-                      ))}
+                          Confirmar Resposta
+                        </Button>
+                      ) : (
+                        <Button onClick={nextQuestion} variant={currentQuestionIndex < 2 ? "secondary" : "success"}>
+                          {currentQuestionIndex < 2 ? "Próxima Questão" : "Concluir Sessão"} <ArrowRight size={20} />
+                        </Button>
+                      )}
                     </div>
                   </div>
-
-                  {/* Footer Actions */}
-                  <div className="p-6 border-t bg-gray-50 flex justify-end">
-                    {!isAnswerChecked ? (
-                      <Button 
-                        onClick={checkAnswer} 
-                        disabled={selectedOption === null}
-                        variant="primary"
-                      >
-                        Confirmar Resposta
-                      </Button>
-                    ) : (
-                      <Button onClick={nextQuestion} variant={currentQuestionIndex < 2 ? "secondary" : "success"}>
-                        {currentQuestionIndex < 2 ? "Próxima Questão" : "Concluir Sessão"} <ArrowRight size={20} />
-                      </Button>
-                    )}
-                  </div>
                 </div>
+
+                {/* Alterado: removido backdrop-blur-sm do footer */}
+                <Footer className={`relative z-10 ${hasCustomBg ? 'text-white/90 bg-black/40' : 'text-gray-600 bg-gray-100'}`} />
               </div>
             );
           }
@@ -691,39 +703,42 @@
             }
 
             return (
-              <div className="min-h-screen bg-gradient-to-br from-teal-500 to-purple-700 flex items-center justify-center p-4 font-sans">
-                <div className="bg-white max-w-2xl w-full rounded-3xl shadow-2xl p-8 md:p-12 text-center space-y-8 animate-fade-in-up">
-                  
-                  <div className="flex justify-center mb-6">
-                    <div className={`${iconBg} p-6 rounded-full inline-flex`}>
-                      <ResultIcon className={`${iconColor} w-16 h-16 md:w-24 md:h-24 fill-current animate-bounce-slow`} />
+              <div className="min-h-screen bg-gradient-to-br from-teal-500 to-purple-700 flex flex-col font-sans">
+                <div className="flex-grow flex items-center justify-center p-4">
+                  <div className="bg-white max-w-2xl w-full rounded-3xl shadow-2xl p-8 md:p-12 text-center space-y-8 animate-fade-in-up">
+                    
+                    <div className="flex justify-center mb-6">
+                      <div className={`${iconBg} p-6 rounded-full inline-flex`}>
+                        <ResultIcon className={`${iconColor} w-16 h-16 md:w-24 md:h-24 fill-current animate-bounce-slow`} />
+                      </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">{resultTitle}</h1>
-                    <h2 className="text-xl text-gray-600">{resultSubtitle}</h2>
-                  </div>
-
-                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                    <p className="text-sm text-gray-500 uppercase tracking-wide font-bold mb-2">Seu Aproveitamento</p>
-                    <div className="text-5xl font-black text-teal-600 mb-2">{percentage}%</div>
-                    <p className="text-gray-600">Você acertou <strong className="text-gray-900">{quizScore}</strong> de <strong className="text-gray-900">{totalQuestions}</strong> questões.</p>
-                  </div>
-
-                  <div className="bg-purple-50 p-6 rounded-xl text-left border-l-4 border-purple-500">
-                    <div className="flex items-start gap-3">
-                      <Heart className="text-purple-600 flex-shrink-0 mt-1 fill-purple-200" />
-                      <p className="text-gray-700 italic">
-                        "Lembre-se: a convivência com empatia e respeito é a chave para um mundo melhor. Use o que aprendeu aqui para cuidar de si e dos outros. Sua saúde mental e suas atitudes fazem a diferença!"
-                      </p>
+                    <div>
+                      <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">{resultTitle}</h1>
+                      <h2 className="text-xl text-gray-600">{resultSubtitle}</h2>
                     </div>
-                  </div>
 
-                  <Button onClick={restartCourse} variant="secondary" className="w-full md:w-auto mx-auto">
-                    <RefreshCw size={20} /> Reiniciar Curso
-                  </Button>
+                    <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                      <p className="text-sm text-gray-500 uppercase tracking-wide font-bold mb-2">Seu Aproveitamento</p>
+                      <div className="text-5xl font-black text-teal-600 mb-2">{percentage}%</div>
+                      <p className="text-gray-600">Você acertou <strong className="text-gray-900">{quizScore}</strong> de <strong className="text-gray-900">{totalQuestions}</strong> questões.</p>
+                    </div>
+
+                    <div className="bg-purple-50 p-6 rounded-xl text-left border-l-4 border-purple-500">
+                      <div className="flex items-start gap-3">
+                        <Heart className="text-purple-600 flex-shrink-0 mt-1 fill-purple-200" />
+                        <p className="text-gray-700 italic">
+                          "Lembre-se: a convivência com empatia e respeito é a chave para um mundo melhor. Use o que aprendeu aqui para cuidar de si e dos outros. Sua saúde mental e suas atitudes fazem a diferença!"
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button onClick={restartCourse} variant="secondary" className="w-full md:w-auto mx-auto">
+                      <RefreshCw size={20} /> Reiniciar Curso
+                    </Button>
+                  </div>
                 </div>
+                <Footer className="text-white/80" />
               </div>
             );
           }
