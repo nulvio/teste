@@ -83,7 +83,7 @@
               {
                 question: "De acordo com o material, quais são os três elementos principais que, juntos, caracterizam uma situação de bullying?",
                 options: [
-                  { text: "Ser uma pessoa passiva, agressiva ou provocativa.", feedback: "Não é bem isso. O material aponta estes como perfis de quem envolvido na situação a violência, e não como as características do ato de bullying em si." },
+                  { text: "Ser uma pessoa passiva, agressiva ou provocativa.", feedback: "Não é bem isso. O material aponta estes como perfis de quem está envolvido na situação a violência, e não como as características do ato de bullying em si." },
                   { text: "Intenção de magoar, repetição da agressão e desequilíbrio de poder entre as partes.", feedback: "Resposta correta. Esta opção descreve os três critérios (intenção, repetição e desequilíbrio de poder) que são apresentados no texto como definidores do bullying." },
                   { text: "Piadas ofensivas, boatos e exclusão de colegas.", feedback: "Não é bem isso. Estes são exemplos de atos que podem ocorrer no bullying, mas não são os três elementos conceituais que definem." },
                   { text: "Tristeza, medo e baixo interesse nos estudos.", feedback: "Não é bem isso. Estes são possíveis efeitos e consequências sofridas pela pessoa em situação de violência, e não os componentes que caracterizam a ação de bullying." }
@@ -580,6 +580,24 @@
                           }}
                         />
                       </div>
+                      
+                      {/* Adicionado aviso e link específico para a Sessão 1 */}
+                      {currentSession.id === 1 && (
+                        <div className="mt-6 p-4 bg-red-50 border-2 border-red-100 rounded-xl text-center animate-fade-in-up">
+                            <p className="font-extrabold text-red-600 text-lg md:text-xl mb-3 tracking-wide">
+                                Bullying é crime!!! Ciberbullying também, e com pena maior!!!
+                            </p>
+                            <a 
+                                href="https://drive.google.com/file/d/14DweK6ibCHW80ewn-s2C4U4f12y_hu_N/view?usp=sharing" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 text-red-700 hover:text-red-900 font-bold border-b-2 border-red-200 hover:border-red-900 transition-colors"
+                            >
+                                Caso queira saber mais acesse o documento clicando aqui <ArrowRight size={16} />
+                            </a>
+                        </div>
+                      )}
+
                     </div>
                   </div>
 
