@@ -108,37 +108,58 @@
           );
         };
 
-        // Componente Footer Reutilizável
-        const Footer = ({ className = "" }) => (
-          <footer className={`w-full py-2 px-4 ${className}`}>
-            <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-                {/* Logos Esquerda */}
-                <div className="flex gap-4 order-2 md:order-1">
-                    <img src="https://i.imgur.com/cdlakCV.png" alt="Logo Institucional Esquerda 1" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
-                    <img src="https://i.imgur.com/47Tvp48.png" alt="Logo Institucional Esquerda 2" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
-                </div>
+        // Componente Footer Reutilizável com Disclaimer Interativo
+        const Footer = ({ className = "" }) => {
+          const [showDisclaimer, setShowDisclaimer] = useState(false);
 
-                {/* Texto Central */}
-                <div className="text-center text-xs md:text-sm order-1 md:order-2 flex-grow mx-4">
-                    <p>
-                      Curso Educativo para Adolescentes desenvolvido para o Programa Saúde na Escola do Município de Florianópolis.
-                    </p>
-                    <p className="mt-1">
-                      Sara Volpato Gominho (CRP 12-05754) - PSE/Gerência de Integração Assistencial.
-                    </p>
-                    <p className="mt-1">
-                      © Prefeitura Municipal de Florianópolis - Secretaria Municipal de Saúde.
-                    </p>
-                </div>
+          return (
+            <footer className={`w-full py-2 px-4 ${className}`}>
+              <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                  {/* Logos Esquerda */}
+                  <div className="flex gap-4 order-2 md:order-1">
+                      <img src="https://i.imgur.com/cdlakCV.png" alt="Logo Institucional Esquerda 1" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
+                      <img src="https://i.imgur.com/47Tvp48.png" alt="Logo Institucional Esquerda 2" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
+                  </div>
 
-                {/* Logos Direita */}
-                <div className="flex gap-4 order-3">
-                    <img src="https://i.imgur.com/ErJy5nX.png" alt="Logo Institucional Direita 1" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
-                    <img src="https://i.imgur.com/9bbH5Ek.png" alt="Logo Institucional Direita 2" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
-                </div>
-            </div>
-          </footer>
-        );
+                  {/* Texto Central */}
+                  {/* Adicionado 'relative' para servir de âncora para o disclaimer absoluto */}
+                  <div className="text-center text-xs md:text-sm order-1 md:order-2 flex-grow mx-4 flex flex-col items-center relative">
+                      <p>
+                        Curso Educativo para Adolescentes desenvolvido para o Programa Saúde na Escola do Município de Florianópolis.
+                      </p>
+                      <p className="mt-1">
+                        Sara Volpato Gominho (CRP 12-05754) - PSE/Gerência de Integração Assistencial.
+                      </p>
+                      
+                      <button 
+                        onClick={() => setShowDisclaimer(!showDisclaimer)}
+                        className="mt-1 hover:underline focus:outline-none cursor-pointer text-inherit bg-transparent border-none p-0 font-medium underline decoration-dotted underline-offset-2"
+                        title="Clique para ver informações de direitos autorais"
+                      >
+                        © Prefeitura Municipal de Florianópolis - Secretaria Municipal de Saúde.
+                      </button>
+
+                      {showDisclaimer && (
+                        /* Alterado para absolute bottom-full para aparecer ACIMA do texto sem expandir o footer */
+                        <div className="absolute bottom-full mb-3 p-4 bg-gray-900/95 backdrop-blur text-white text-xs rounded-xl border border-gray-600 shadow-2xl animate-fade-in-up w-max max-w-[90vw] md:max-w-md z-50">
+                          <p className="leading-relaxed">
+                            Este conteúdo não pode ser reproduzido parcial ou totalmente sem a autorização da Secretaria Municipal de Saúde de Florianópolis, para contato enviar e-mail para <a href="mailto:saragpmf@gmail.com" className="text-teal-300 hover:text-teal-100 underline font-bold">saragpmf@gmail.com</a>.
+                          </p>
+                          {/* Seta indicativa para baixo (opcional, puramente estética) */}
+                          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-600 transform rotate-45"></div>
+                        </div>
+                      )}
+                  </div>
+
+                  {/* Logos Direita */}
+                  <div className="flex gap-4 order-3">
+                      <img src="https://i.imgur.com/ErJy5nX.png" alt="Logo Institucional Direita 1" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
+                      <img src="https://i.imgur.com/9bbH5Ek.png" alt="Logo Institucional Direita 2" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
+                  </div>
+              </div>
+            </footer>
+          );
+        };
 
         // --- DADOS DO CURSO ---
         const courseData = [
@@ -549,35 +570,8 @@
                   </div>
                 </div>
                 
-                {/* FOOTER EXCLUSIVO DA CAPA COM LOGOS */}
-                <footer className="absolute bottom-0 w-full bg-black/40 text-white/80 py-2 px-4">
-                    <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-                        {/* Logos Esquerda - Tamanho fixo e fundo branco */}
-                        <div className="flex gap-4 order-2 md:order-1">
-                            <img src="https://i.imgur.com/cdlakCV.png" alt="Logo Institucional Esquerda 1" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
-                            <img src="https://i.imgur.com/47Tvp48.png" alt="Logo Institucional Esquerda 2" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
-                        </div>
-
-                        {/* Texto Central */}
-                        <div className="text-center text-xs md:text-sm order-1 md:order-2 flex-grow mx-4">
-                            <p>
-                              Curso Educativo para Adolescentes desenvolvido para o Programa Saúde na Escola do Município de Florianópolis.
-                            </p>
-                            <p className="mt-1">
-                              Sara Volpato Gominho (CRP 12-05754) - PSE/Gerência de Integração Assistencial.
-                            </p>
-                            <p className="mt-1">
-                              © Prefeitura Municipal de Florianópolis - Secretaria Municipal de Saúde.
-                            </p>
-                        </div>
-
-                        {/* Logos Direita - Tamanho fixo e fundo branco */}
-                        <div className="flex gap-4 order-3">
-                            <img src="https://i.imgur.com/ErJy5nX.png" alt="Logo Institucional Direita 1" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
-                            <img src="https://i.imgur.com/9bbH5Ek.png" alt="Logo Institucional Direita 2" className="w-14 h-14 md:w-16 md:h-16 object-contain bg-white rounded-lg p-1" />
-                        </div>
-                    </div>
-                </footer>
+                {/* FOOTER DA CAPA AGORA USA O COMPONENTE REUTILIZÁVEL (CORRIGIDO) */}
+                <Footer className="absolute bottom-0 bg-black/40 text-white/80" />
               </div>
             );
           }
@@ -847,8 +841,12 @@
                       <Button onClick={restartCourse} variant="secondary" className="w-full md:w-auto">
                         <RefreshCw size={20} /> Reiniciar Curso
                       </Button>
-                      <Button onClick={handleSendEmail} variant="primary" className="w-full md:w-auto">
-                        <Mail size={20} /> Enviar Resultado por E-mail
+                      <Button 
+                        onClick={() => window.open("https://docs.google.com/forms/d/e/1FAIpQLSdriXPpV_c4vrdjlFlVmlH0XNaTzrxq83bqP3dk1OkqawtfyA/viewform?usp=dialog", "_blank")} 
+                        variant="primary" 
+                        className="w-full md:w-auto"
+                      >
+                        <Star size={20} /> Avalie o curso
                       </Button>
                     </div>
 
